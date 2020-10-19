@@ -13,8 +13,13 @@ export default new Vuex.Store({
     } 
   },
   actions: {
-    setMonsters({ commit }, data) {
+    async setMonsters({ commit }, data) {
       commit('SET_MONSTERS', data);
+    }
+  },
+  getters: {
+    getAllMonstersFromState: (state) => {
+      return state.monsters.data.results
     }
   },
   modules: {}

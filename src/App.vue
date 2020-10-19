@@ -1,32 +1,23 @@
 <template>
   <v-app>
     <v-main>
-      
-      <HelloWorld />
+      <monsters-list />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
-import { getAllMonsters } from "./util/dnd-api-util.js"
+import MonstersList from "./components/monsters-list.vue";
 
 export default {
   name: "App",
 
   components: {
-    HelloWorld
+    MonstersList
   },
 
   data: () => ({
     //
-  }),
-  created() {
-    getAllMonsters()
-      .then( (res) => {
-        this.$store.dispatch('setMonsters', res)
-        console.log(res)
-      })
-  }
+  })
 };
 </script>
