@@ -24,7 +24,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { getAllMonsters } from "../util/dnd-api-util.js";
+import { getAllMonsters } from "../../util/dnd-api-util.js";
 
 export default {
   name: "MonstersList",
