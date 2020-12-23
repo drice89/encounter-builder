@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    monsters: null,
+    monsters: [],
     characters: []
   },
   mutations: {
@@ -26,7 +26,7 @@ export default new Vuex.Store({
   },
   getters: {
     getAllMonstersFromState: state => {
-      return state.monsters.data.results;
+      return state.monsters;
     },
     getAllCharactersFromState: state => {
       return state.characters;
