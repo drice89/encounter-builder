@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="characters" item-key="name">
+    <v-data-table :headers="headers" :items="characters" item-key="name" dark>
     </v-data-table>
   </div>
 </template>

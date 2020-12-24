@@ -20,13 +20,26 @@
       </div>
     </v-container>
     <v-container>
-      <v-list>
-        <li v-for="(monster, index) in selectedMonsters" :key="index" class="">
-          <span>{{ monster.xp }}</span>
-          <span>{{ monster.name }}</span>
-          <span @click="removeMonsterFromRoster(monster)">X</span>
-        </li>
-      </v-list>
+      <v-simple-table dark>
+        <thead>
+          <td>Monster Name</td>
+          <td>XP value</td>
+          <td>Remove</td> 
+        </thead>
+        <tr v-for="(monster, index) in selectedMonsters" :key="index" class="">
+          <td>{{ monster.name }}</td>
+          <td>{{ monster.xp }}</td>
+          <td @click="removeMonsterFromRoster(monster)">X</td>
+        </tr>
+        <tfoot>
+          <td>
+            Total Monsters: {{ selectedMonsters.length }}
+          </td>
+          <td>
+            Total Adjusted Xp: {{ adjustedTotalXp }}
+          </td>
+        </tfoot>
+      </v-simple-table>
     </v-container>
   </div>
   <div>
@@ -40,6 +53,7 @@
 
 <script>
 /* eslint-disable */
+// refactor ternary to get multiplier
 import { mapGetters } from "vuex";
 import { DIFFICULTY_THRESHOLD, THRESHOLD_MULTIPLIERS, THRESHOLD_MULTIPLIERS_LIMIT } from '../../mixins/rules.js';
 
@@ -49,7 +63,9 @@ export default {
   data: () => ({
     selectedMonsters: [],
     difficultyThreshold: DIFFICULTY_THRESHOLD,
-    threshold: DIFFICULTY_THRESHOLD.EASY
+    threshold: DIFFICULTY_THRESHOLD.EASY,
+    rawTotalXp: 0,
+    adjustedTotalXp: 0
   }),
   computed: {
     ...mapGetters([
@@ -58,15 +74,12 @@ export default {
     ]),
     monstersByCr() {
       return this.getAllMonstersFromState.sort((a, b) => a.cr - b.cr)
-    }
+    },
   },
   methods: {
     generateRandomEncounter(){
-      // get each party member from state
-      // total their level at the selected threshold
       const totalXp = this.getTotalCharacterLevel(this.threshold)
       let runningMonXpTotal = 0
-      console.log(totalXp)
       let finished = false
       const pool = []
       while (totalXp && !finished) {
@@ -82,14 +95,26 @@ export default {
           runningMonXpTotal += pickedMonster.xp
         }
       }
-      console.log(runningMonXpTotal)   
+      //refactor
+      const multiplier = pool.length > THRESHOLD_MULTIPLIERS_LIMIT ? THRESHOLD_MULTIPLIERS[THRESHOLD_MULTIPLIERS_LIMIT] : THRESHOLD_MULTIPLIERS[pool.length]
+      debugger
+      this.rawTotalXp = runningMonXpTotal
+      this.adjustedTotalXp = this.rawTotalXp * multiplier
       this.selectedMonsters = pool
     },
     addMonsterToRoster(monster) {
-      let monsterCopy = { id: this.selectedMonsters.length, ...monster }
+      const monsterCopy = { id: this.selectedMonsters.length, ...monster }
+      this.rawTotalXp += monsterCopy.xp
+      //refactor
+      const multiplier = this.selectedMonsters.length > THRESHOLD_MULTIPLIERS_LIMIT ? THRESHOLD_MULTIPLIERS[THRESHOLD_MULTIPLIERS_LIMIT] : THRESHOLD_MULTIPLIERS[this.selectedMonsters.length + 1]
+      this.adjustedTotalXp = this.rawTotalXp * multiplier
       this.selectedMonsters.push(monsterCopy)
     },
     removeMonsterFromRoster(monster) {
+      this.rawTotalXp -= monster.xp
+      //refactor
+      const multiplier = this.selectedMonsters.length > THRESHOLD_MULTIPLIERS_LIMIT ? THRESHOLD_MULTIPLIERS[THRESHOLD_MULTIPLIERS_LIMIT] : THRESHOLD_MULTIPLIERS[this.selectedMonsters.length - 1]
+      this.adjustedTotalXp = this.rawTotalXp * multiplier
       this.selectedMonsters = this.selectedMonsters.filter(m => m.id !== monster.id)
     },
   }
@@ -100,6 +125,8 @@ export default {
 div.monsters-list-container {
   display: flex;
   justify-content: space-around;
+  background-color: #1E1E1E;
+  color: white;
 
   .monster-select {
     width: 400px;
