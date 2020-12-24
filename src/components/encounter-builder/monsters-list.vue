@@ -11,8 +11,8 @@
         multiple
       >
         <option
-          v-for="monster in monstersByCr"
-          :key="monster.name"
+          v-for="(monster, index) in monstersByCr"
+          :key="index"
           :value="monster"
         >
           <span>{{ monster.name }}</span>
@@ -22,8 +22,9 @@
     </v-container>
     <v-container>
       <v-list>
-        <li v-for="monster in selectedMonsters" :key="monster.name">
-          {{ monster.name }}
+        <li v-for="(monster, index) in selectedMonsters" :key="index">
+          <span>{{ monster.xp }}</span>
+          <span>{{ monster.name }}</span>
         </li>
       </v-list>
     </v-container>
@@ -39,7 +40,7 @@
 <script>
 /* eslint-disable */
 import { mapGetters } from "vuex";
-import { DIFFICULTY_THRESHOLD } from '../../mixins/rules.js';
+import { DIFFICULTY_THRESHOLD, THRESHOLD_MULTIPLIERS, THRESHOLD_MULTIPLIERS_LIMIT } from '../../mixins/rules.js';
 import { getAllMonsters } from "../../util/dnd-api-util.js";
 
 export default {
@@ -54,7 +55,10 @@ export default {
     this.$store.dispatch("setMonsters", await getAllMonsters())
   },
   computed: {
-    ...mapGetters(["getAllMonstersFromState", "getTotalCharacterLevel"]),
+    ...mapGetters([
+      "getAllMonstersFromState", 
+      "getTotalCharacterLevel"
+    ]),
     monstersByCr() {
       return this.getAllMonstersFromState.sort((a, b) => a.cr - b.cr)
     }
@@ -63,21 +67,25 @@ export default {
       generateRandomEncounter(){
         // get each party member from state
         // total their level at the selected threshold
-        let totalXp = this.getTotalCharacterLevel(this.threshold)
+        const totalXp = this.getTotalCharacterLevel(this.threshold)
+        let runningMonXpTotal = 0
+        console.log(totalXp)
         let finished = false
         const pool = []
         while (totalXp && !finished) {
           let monsters = this.monstersByCr.filter(monster => {
-            return monster.xp <= totalXp
+            const thresholdMultiplier = pool.length > THRESHOLD_MULTIPLIERS_LIMIT ? THRESHOLD_MULTIPLIERS[THRESHOLD_MULTIPLIERS_LIMIT] : THRESHOLD_MULTIPLIERS[pool.length + 1]
+            return (thresholdMultiplier * (monster.xp + runningMonXpTotal)) <= totalXp
           });
           if (!monsters.length) {
             finished = true;
           } else {
             const pickedMonster = monsters[(Math.floor(Math.random() * monsters.length))]
             pool.push(pickedMonster)
-            totalXp -= pickedMonster.xp
+            runningMonXpTotal += pickedMonster.xp
           }
-        }   
+        }
+        console.log(runningMonXpTotal)   
         this.selectedMonsters = pool
       }
   //       addMonsterToRoster(monster) {
