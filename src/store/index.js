@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { ENCOUNTER_DIFFICULTY_TABLE } from "../mixins/rules"
 
 Vue.use(Vuex);
 
@@ -30,6 +31,13 @@ export default new Vuex.Store({
     },
     getAllCharactersFromState: state => {
       return state.characters;
+    },
+    getTotalCharacterLevel: state => threshold => {
+      let totalXp = 0
+      state.characters.forEach(char => {
+        totalXp += ENCOUNTER_DIFFICULTY_TABLE[char.level][threshold]
+      });
+      return totalXp
     }
   },
   modules: {}

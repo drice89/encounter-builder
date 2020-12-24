@@ -1,10 +1,10 @@
 <template>
   <div>
     <form @submit.prevent="submitCharacter">
-      <label for="char-name">Character Name</label>
-      <input :name="char - name" type="text" v-model="name" />
-      <label for="char-level">Character Level</label>
-      <input type="text" :name="char - level" v-model="level" />
+      <label for="charname">Character Name</label>
+      <input name="charname" type="text" v-model="name" />
+      <label for="charlevel">Character Level</label>
+      <input type="text" name="charlevel" v-model="level" />
       <label for="init">HP</label>
       <input type="text" :name="hp" v-model="hp" />
       <label for="init">Initiative Value</label>

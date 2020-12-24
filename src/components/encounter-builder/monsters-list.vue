@@ -27,25 +27,34 @@
         </li>
       </v-list>
     </v-container>
+    <div>
+      <select v-model="threshold">
+        <option v-for="option in Object.keys(difficultyThreshold)" :key="option" :value="difficultyThreshold[option]" :label="option.toLowerCase()" />
+      </select>
+      <button @click="generateRandomEncounter()">Generate Random Encounter</button>
+    </div>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
 import { mapGetters } from "vuex";
+import { DIFFICULTY_THRESHOLD } from '../../mixins/rules.js';
 import { getAllMonsters } from "../../util/dnd-api-util.js";
 
 export default {
   name: "MonstersList",
 
   data: () => ({
-    selectedMonsters: []
+    selectedMonsters: [],
+    difficultyThreshold: DIFFICULTY_THRESHOLD,
+    threshold: DIFFICULTY_THRESHOLD.EASY
   }),
   async mounted() {
     this.$store.dispatch("setMonsters", await getAllMonsters())
   },
   computed: {
-    ...mapGetters(["getAllMonstersFromState"]),
+    ...mapGetters(["getAllMonstersFromState", "getTotalCharacterLevel"]),
     monstersByCr() {
       return this.getAllMonstersFromState.sort((a, b) => a.cr - b.cr)
     }
@@ -54,13 +63,22 @@ export default {
       generateRandomEncounter(){
         // get each party member from state
         // total their level at the selected threshold
-        // while threshold is > 0 || some other condition tbd
-        // make adjustments for number of monsters already in the list
-        // filter all monsters above that threshold
-        // randomly select monster from that list
-        // add it to a monsters array
-        // subtract its xp from the total threshold
-        // return monster array
+        let totalXp = this.getTotalCharacterLevel(this.threshold)
+        let finished = false
+        const pool = []
+        while (totalXp && !finished) {
+          let monsters = this.monstersByCr.filter(monster => {
+            return monster.xp <= totalXp
+          });
+          if (!monsters.length) {
+            finished = true;
+          } else {
+            const pickedMonster = monsters[(Math.floor(Math.random() * monsters.length))]
+            pool.push(pickedMonster)
+            totalXp -= pickedMonster.xp
+          }
+        }   
+        this.selectedMonsters = pool
       }
   //       addMonsterToRoster(monster) {
   //           this.selectedMonsters.push(monster)
