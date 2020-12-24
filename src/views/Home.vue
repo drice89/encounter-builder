@@ -1,5 +1,6 @@
 <template>
   <div>
+    <PartyDifficultyThresholds />
     <MonsterList />
     <CharacterForm />
     <EncounterTable />
@@ -11,13 +12,19 @@
 import MonsterList from "@/components/encounter-builder/monsters-list.vue";
 import CharacterForm from "@/components/encounter-builder/character-form.vue";
 import EncounterTable from "@/components/encounter-builder/encounter-table.vue";
+import PartyDifficultyThresholds from "@/components/encounter-builder/party-difficulty-thresholds.vue"
+import { getAllMonsters } from "@/util/dnd-api-util.js";
 
 export default {
   name: "Home",
   components: {
     MonsterList,
     CharacterForm,
-    EncounterTable
-  }
+    EncounterTable,
+    PartyDifficultyThresholds
+  },
+  async mounted() {
+    this.$store.dispatch("setMonsters", await getAllMonsters())
+  },
 };
 </script>

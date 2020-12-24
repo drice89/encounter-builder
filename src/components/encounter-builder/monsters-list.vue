@@ -1,5 +1,6 @@
 
 <template>
+<div>
   <div class="monsters-list-container">
     <v-container>
       <div class="monsters-pick-list">
@@ -27,20 +28,20 @@
         </li>
       </v-list>
     </v-container>
-    <div>
-      <select v-model="threshold">
-        <option v-for="option in Object.keys(difficultyThreshold)" :key="option" :value="difficultyThreshold[option]" :label="option.toLowerCase()" />
-      </select>
-      <button @click="generateRandomEncounter()">Generate Random Encounter</button>
-    </div>
   </div>
+  <div>
+    <select v-model="threshold">
+      <option v-for="option in Object.keys(difficultyThreshold)" :key="option" :value="difficultyThreshold[option]" :label="option.toLowerCase()" />
+    </select>
+    <button @click="generateRandomEncounter()">Generate Random Encounter</button>
+  </div>
+</div>
 </template>
 
 <script>
 /* eslint-disable */
 import { mapGetters } from "vuex";
 import { DIFFICULTY_THRESHOLD, THRESHOLD_MULTIPLIERS, THRESHOLD_MULTIPLIERS_LIMIT } from '../../mixins/rules.js';
-import { getAllMonsters } from "../../util/dnd-api-util.js";
 
 export default {
   name: "MonstersList",
@@ -50,9 +51,6 @@ export default {
     difficultyThreshold: DIFFICULTY_THRESHOLD,
     threshold: DIFFICULTY_THRESHOLD.EASY
   }),
-  async mounted() {
-    this.$store.dispatch("setMonsters", await getAllMonsters())
-  },
   computed: {
     ...mapGetters([
       "getAllMonstersFromState", 
