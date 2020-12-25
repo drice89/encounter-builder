@@ -2,7 +2,7 @@
 import axios from "axios";
 import { ALL_CR, CR_TO_XP } from "../mixins/rules.js"
 
-const baseUrl = "https://www.dnd5eapi.co/api/";
+const baseUrl = "https://www.dnd5eapi.co/";
 
 const callDndApi = (verb, endpoint, params = {}) => {
   return axios({
@@ -20,7 +20,7 @@ export const getAllMonsters = () => {
       const promise = new Promise((resolve, reject) => {
         axios({
           method: 'GET',
-          url: `${baseUrl}monsters`,
+          url: `${baseUrl}api/monsters/`,
           params: {challenge_rating: cr}
         })
         .then(res => {
@@ -47,7 +47,7 @@ export const getMonstersByCr = cr => {
     const params = {
       challenge_rating: cr
     };
-    return callDndApi("get", "monsters", params);
+    return callDndApi("get", "api/monsters/", params);
   });
 };
 
@@ -57,5 +57,7 @@ export const getAllMonstersByCr = () => {
 }
 
 export const getMonster = monsterUrl => {
-  return callDndApi("get", monsterUrl);
+  return new Promise(() => {
+    callDndApi("get", monsterUrl)
+  })
 };

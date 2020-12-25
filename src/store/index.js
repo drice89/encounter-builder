@@ -1,25 +1,37 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { ENCOUNTER_DIFFICULTY_TABLE } from "../mixins/rules"
+import { getMonster, getAllMonsters } from "@/util/dnd-api-util.js"
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    monsters: [],
+    monsters: {},
     characters: []
   },
   mutations: {
     SET_MONSTERS(state, payload) {
       state.monsters = payload;
     },
+    ADD_MONSTER(state, payload) {
+      state.monsters[payload.index] = payload
+    },
     ADD_CHARACTER(state, payload) {
       state.characters.push(payload);
     }
   },
   actions: {
-    async setMonsters({ commit }, data) {
-      commit("SET_MONSTERS", data);
+    async setMonsters({ commit }) {
+      const data = await getAllMonsters()
+      let monsters = {};
+      data.forEach(monster => {
+        monsters[monster.index] = monster
+      })
+      commit("SET_MONSTERS", monsters);
+    },
+    async addMonster({ commit }, monsterUrl){
+      commit("ADD_MONSTER", await getMonster(monsterUrl))
     },
     async addCharacter({ commit }, data) {
       commit("ADD_CHARACTER", data);
@@ -27,7 +39,7 @@ export default new Vuex.Store({
   },
   getters: {
     getAllMonstersFromState: state => {
-      return state.monsters;
+      return Object.values(state.monsters) || [];
     },
     getAllCharactersFromState: state => {
       return state.characters;

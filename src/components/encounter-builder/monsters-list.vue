@@ -17,6 +17,9 @@
         </li>
       </ul>
     </div>
+    <div>
+
+    </div>
     <div class="selected-monsters">
       <v-simple-table dark>
         <thead>
