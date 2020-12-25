@@ -2,24 +2,22 @@
 <template>
 <div>
   <div class="monsters-list-container">
-    <v-container>
-      <div class="monsters-pick-list">
-        Monsters
-        <ul class="monster-select">
-          <li
-            v-for="(monster, index) in monstersByCr"
-            :key="index"
-            :value="monster"
-            @click="addMonsterToRoster(monster)"
-            class="monster-option"
-          >
-            <span>{{ monster.name }}</span>
-            <span>{{ monster.cr }}</span>
-          </li>
-        </ul>
-      </div>
-    </v-container>
-    <v-container>
+    <div class="monsters-pick-list">
+      Monsters
+      <ul class="monster-select">
+        <li
+          v-for="(monster, index) in monstersByCr"
+          :key="index"
+          :value="monster"
+          @click="addMonsterToRoster(monster)"
+          class="monster-option"
+        >
+          <span>{{ monster.name }}</span>
+          <span>{{ monster.cr }}</span>
+        </li>
+      </ul>
+    </div>
+    <div class="selected-monsters">
       <v-simple-table dark>
         <thead>
           <td>Monster Name</td>
@@ -29,7 +27,7 @@
         <tr v-for="(monster, index) in selectedMonsters" :key="index" class="">
           <td>{{ monster.name }}</td>
           <td>{{ monster.xp }}</td>
-          <td @click="removeMonsterFromRoster(monster)">X</td>
+          <td><v-btn @click="removeMonsterFromRoster(monster)">X</v-btn></td>
         </tr>
         <tfoot>
           <td>
@@ -40,13 +38,13 @@
           </td>
         </tfoot>
       </v-simple-table>
-    </v-container>
+    </div>
   </div>
   <div>
     <select v-model="threshold">
       <option v-for="option in Object.keys(difficultyThreshold)" :key="option" :value="difficultyThreshold[option]" :label="option.toLowerCase()" />
     </select>
-    <button @click="generateRandomEncounter()">Generate Random Encounter</button>
+    <v-btn @click="generateRandomEncounter()">Generate Random Encounter</v-btn>
   </div>
 </div>
 </template>
@@ -97,7 +95,6 @@ export default {
       }
       //refactor
       const multiplier = pool.length > THRESHOLD_MULTIPLIERS_LIMIT ? THRESHOLD_MULTIPLIERS[THRESHOLD_MULTIPLIERS_LIMIT] : THRESHOLD_MULTIPLIERS[pool.length]
-      debugger
       this.rawTotalXp = runningMonXpTotal
       this.adjustedTotalXp = this.rawTotalXp * multiplier
       this.selectedMonsters = pool
@@ -124,23 +121,37 @@ export default {
 <style lang="scss" scoped>
 div.monsters-list-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   background-color: #1E1E1E;
   color: white;
 
   .monster-select {
-    width: 400px;
+    min-width: 200px;
+    max-width: 400px;
     height: 400px;
     display: block;
     overflow-y: scroll;
-  }
-  .monster-option {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    .fixed-width {
-      width: 200px;
+
+    li.monster-option {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 2px 6px;
+      &:hover{
+        background-color: white;
+        color: black;
+      }
+      .fixed-width {
+        width: 200px;
+      }
     }
+  }
+
+  .selected-monsters {
+    width: 500px;
+    height: 400px;
+    padding: 16px;
+    overflow-y: auto;
   }
 }
 </style>

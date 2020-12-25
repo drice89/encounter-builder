@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-simple-table dense dark>
+    <v-simple-table dark>
       <thead>
         <td>Total Party XP Thresholds</td>
         <td>Easy</td>
