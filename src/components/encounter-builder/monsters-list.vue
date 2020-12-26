@@ -10,14 +10,25 @@
           :key="index"
           :value="monster"
           @click="addMonsterToRoster(monster)"
+          @mouseenter="getMonsterProfile(monster)"
           class="monster-option"
         >
           <span>{{ monster.name }}</span>
-          <span>{{ monster.cr }}</span>
+          <span>{{ monster.challenge_rating }}</span>
         </li>
       </ul>
     </div>
-    <div>
+    <div v-if="activeMonster" class="active-monster">
+      <div>Name {{activeMonster.name}}</div>
+      <div>HP {{activeMonster.hit_points}}</div>
+      <div>AC {{ activeMonster.armor_class}}</div>
+      <div>
+        Attack
+        <div v-for="(action, index) in activeMonster.actions" :key="index">
+          <span>Action: {{action.name}}</span>
+          <span>Description: {{action.desc}}</span>
+        </div>
+      </div>
 
     </div>
     <div class="selected-monsters">
@@ -27,7 +38,7 @@
           <td>XP value</td>
           <td>Remove</td> 
         </thead>
-        <tr v-for="(monster, index) in selectedMonsters" :key="index" class="">
+        <tr v-for="(monster, index) in selectedMonsters" :key="index">
           <td>{{ monster.name }}</td>
           <td>{{ monster.xp }}</td>
           <td><v-btn @click="removeMonsterFromRoster(monster)">X</v-btn></td>
@@ -55,7 +66,7 @@
 <script>
 /* eslint-disable */
 // refactor ternary to get multiplier
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { DIFFICULTY_THRESHOLD, THRESHOLD_MULTIPLIERS, THRESHOLD_MULTIPLIERS_LIMIT } from '../../mixins/rules.js';
 
 export default {
@@ -66,7 +77,8 @@ export default {
     difficultyThreshold: DIFFICULTY_THRESHOLD,
     threshold: DIFFICULTY_THRESHOLD.EASY,
     rawTotalXp: 0,
-    adjustedTotalXp: 0
+    adjustedTotalXp: 0,
+    activeMonster: null
   }),
   computed: {
     ...mapGetters([
@@ -78,6 +90,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["addMonster"]),
     generateRandomEncounter(){
       const totalXp = this.getTotalCharacterLevel(this.threshold)
       let runningMonXpTotal = 0
@@ -117,6 +130,12 @@ export default {
       this.adjustedTotalXp = this.rawTotalXp * multiplier
       this.selectedMonsters = this.selectedMonsters.filter(m => m.id !== monster.id)
     },
+    getMonsterProfile(monster) {
+      if (!monster.loaded) {
+        this.addMonster(monster.url)
+      }
+      this.activeMonster = monster
+    }
   }
 };
 </script>
@@ -149,7 +168,10 @@ div.monsters-list-container {
       }
     }
   }
-
+  .active-monster {
+    width: 400px;
+    height: 400px;
+  }
   .selected-monsters {
     width: 500px;
     height: 400px;

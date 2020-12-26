@@ -1,6 +1,6 @@
 # encounter-builder
 
-Encounter builder is an open source front-end only application designed to help dungeon masters build better encounters for their parties. It is build with:
+Encounter builder is an open source front-end only application designed to help dungeon masters build better encounters for their parties. It is built with:
 
 - Vue.js
 - Vuex

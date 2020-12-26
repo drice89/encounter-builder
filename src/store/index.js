@@ -31,7 +31,10 @@ export default new Vuex.Store({
       commit("SET_MONSTERS", monsters);
     },
     async addMonster({ commit }, monsterUrl){
-      commit("ADD_MONSTER", await getMonster(monsterUrl))
+      const res = await getMonster(monsterUrl)
+      let monster = res.data
+      monster.loaded = true
+      commit("ADD_MONSTER", monster)
     },
     async addCharacter({ commit }, data) {
       commit("ADD_CHARACTER", data);
