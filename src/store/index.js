@@ -8,7 +8,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     monsters: {},
-    characters: []
+    characters: [],
+    spinner: false
   },
   mutations: {
     SET_MONSTERS(state, payload) {
@@ -19,6 +20,12 @@ export default new Vuex.Store({
     },
     ADD_CHARACTER(state, payload) {
       state.characters.push(payload);
+    },
+    SET_SPINNER(state) {
+      state.spinner = true
+    },
+    REMOVE_SPINNER(state) {
+      state.spinner = false
     }
   },
   actions: {
@@ -35,9 +42,16 @@ export default new Vuex.Store({
       let monster = res.data
       monster.loaded = true
       commit("ADD_MONSTER", monster)
+      return monster
     },
     async addCharacter({ commit }, data) {
       commit("ADD_CHARACTER", data);
+    },
+    async setSpinner({ commit }) {
+      commit("SET_SPINNER");
+    },
+    async removeSpinner({ commit }) {
+      commit("REMOVE_SPINNER")
     }
   },
   getters: {
@@ -53,6 +67,9 @@ export default new Vuex.Store({
         totalXp += ENCOUNTER_DIFFICULTY_TABLE[char.level][threshold]
       });
       return totalXp
+    },
+    getSpinnerStatus: state => {
+      return state.spinner
     }
   },
   modules: {}

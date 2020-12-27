@@ -18,19 +18,7 @@
         </li>
       </ul>
     </div>
-    <div v-if="activeMonster" class="active-monster">
-      <div>Name {{activeMonster.name}}</div>
-      <div>HP {{activeMonster.hit_points}}</div>
-      <div>AC {{ activeMonster.armor_class}}</div>
-      <div>
-        Attack
-        <div v-for="(action, index) in activeMonster.actions" :key="index">
-          <span>Action: {{action.name}}</span>
-          <span>Description: {{action.desc}}</span>
-        </div>
-      </div>
-
-    </div>
+    <ActiveMonster v-if="activeMonster" class="active-monster" :monster="activeMonster" />
     <div class="selected-monsters">
       <v-simple-table dark>
         <thead>
@@ -68,10 +56,13 @@
 // refactor ternary to get multiplier
 import { mapGetters, mapActions } from "vuex";
 import { DIFFICULTY_THRESHOLD, THRESHOLD_MULTIPLIERS, THRESHOLD_MULTIPLIERS_LIMIT } from '../../mixins/rules.js';
+import ActiveMonster from "./active-monster"
 
 export default {
   name: "MonstersList",
-
+  components: {
+    ActiveMonster
+  },
   data: () => ({
     selectedMonsters: [],
     difficultyThreshold: DIFFICULTY_THRESHOLD,
@@ -133,6 +124,9 @@ export default {
     getMonsterProfile(monster) {
       if (!monster.loaded) {
         this.addMonster(monster.url)
+          .then(res => {
+            this.activeMonster = res
+          })
       }
       this.activeMonster = monster
     }
