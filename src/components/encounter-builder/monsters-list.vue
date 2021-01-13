@@ -3,7 +3,12 @@
 <div>
   <div class="monsters-list-container">
     <div class="monsters-pick-list">
-      Monsters
+      <div>
+        Monsters
+      </div>
+      <div>
+        <input type="text" v-model="search">
+      </div>
       <ul class="monster-select">
         <li
           v-for="(monster, index) in monstersByCr"
@@ -69,7 +74,8 @@ export default {
     threshold: DIFFICULTY_THRESHOLD.EASY,
     rawTotalXp: 0,
     adjustedTotalXp: 0,
-    activeMonster: null
+    activeMonster: null,
+    search: null
   }),
   computed: {
     ...mapGetters([
@@ -77,7 +83,9 @@ export default {
       "getTotalCharacterLevel"
     ]),
     monstersByCr() {
-      return this.getAllMonstersFromState.sort((a, b) => a.cr - b.cr)
+      return this.getAllMonstersFromState
+        .filter(monster => this.monsterInSearch(monster))
+        .sort((a, b) => a.cr - b.cr)
     },
   },
   methods: {
@@ -129,6 +137,9 @@ export default {
           })
       }
       this.activeMonster = monster
+    },
+    monsterInSearch(monster) {
+      return !this.search || monster.name.toLowerCase().toLowerCase().includes(this.search)
     }
   }
 };
