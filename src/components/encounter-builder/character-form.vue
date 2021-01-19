@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -26,10 +27,12 @@ export default {
   },
   methods: {
     submitCharacter() {
-      this.$store.dispatch("addCharacter", this.characterObject);
+      let id = this.charactersLength
+      this.$store.dispatch("addCharacter", {id, ...this.characterObject});
     }
   },
   computed: {
+    ...mapGetters(["charactersLength"]),
     characterObject() {
       return {
         name: this.name,

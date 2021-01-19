@@ -8,18 +8,21 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     monsters: {},
-    characters: [],
+    characters: {},
     spinner: false
   },
   mutations: {
     SET_MONSTERS(state, payload) {
       state.monsters = payload;
     },
+    SET_SAVED_CHARACTERS(state, payload) {
+      state.characters = { ...payload }
+    },
     ADD_MONSTER(state, payload) {
       state.monsters[payload.index] = payload
     },
     ADD_CHARACTER(state, payload) {
-      state.characters.push(payload);
+      Vue.set(state.characters, payload.id, payload) 
     },
     SET_SPINNER(state) {
       state.spinner = true
@@ -52,6 +55,9 @@ export default new Vuex.Store({
     },
     async removeSpinner({ commit }) {
       commit("REMOVE_SPINNER")
+    },
+    async setSavedCharacters({ commit }, data) {
+      commit("SET_SAVED_CHARACTERS", data)
     }
   },
   getters: {
@@ -61,9 +67,12 @@ export default new Vuex.Store({
     getAllCharactersFromState: state => {
       return state.characters;
     },
+    charactersLength: state => {
+      return Object.keys(state.characters).length || 0
+    },
     getTotalCharacterLevel: state => threshold => {
       let totalXp = 0
-      state.characters.forEach(char => {
+      Object.values(state.characters).forEach(char => {
         totalXp += ENCOUNTER_DIFFICULTY_TABLE[char.level][threshold]
       });
       return totalXp

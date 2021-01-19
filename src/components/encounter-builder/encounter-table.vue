@@ -1,7 +1,8 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="characters" item-key="name" dark>
+    <v-data-table :headers="headers" :items="Object.values(getAllCharactersFromState)" item-key="id" dark>
     </v-data-table>
+    <v-btn @click="save">Save</v-btn> 
   </div>
 </template>
 
@@ -16,16 +17,19 @@ export default {
         { text: "name", value: "name" },
         { text: "level", value: "level" },
         { text: "hp", value: "hp" },
-        { text: "init", value: "init" }
-      ]
+        { text: "init", value: "init" },
+      ],
+      numChars: 0
     };
   },
   computed: {
     ...mapGetters(["getAllCharactersFromState"]),
-    characters() {
-      return this.getAllCharactersFromState
+  },
+  methods: {
+    save() {
+      localStorage.characters = JSON.stringify(this.getAllCharactersFromState)
     }
-  }
+  },
 }
 </script>
 
