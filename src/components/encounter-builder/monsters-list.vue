@@ -24,28 +24,7 @@
       </ul>
     </div>
     <ActiveMonster v-if="activeMonster" class="active-monster" :monster="activeMonster" />
-    <div class="selected-monsters">
-      <v-simple-table dark>
-        <thead>
-          <td>Monster Name</td>
-          <td>XP value</td>
-          <td>Remove</td> 
-        </thead>
-        <tr v-for="(monster, index) in selectedMonsters" :key="index">
-          <td>{{ monster.name }}</td>
-          <td>{{ monster.xp }}</td>
-          <td><v-btn @click="removeMonsterFromRoster(monster)">X</v-btn></td>
-        </tr>
-        <tfoot>
-          <td>
-            Total Monsters: {{ selectedMonsters.length }}
-          </td>
-          <td>
-            Total Adjusted Xp: {{ adjustedTotalXp }}
-          </td>
-        </tfoot>
-      </v-simple-table>
-    </div>
+    <MonsterRoster :adjustedTotalXp="adjustedTotalXp" :monsters="selectedMonsters" @remove = "removeMonsterFromRoster" />
   </div>
   <div>
     <select v-model="threshold">
@@ -62,11 +41,13 @@
 import { mapGetters, mapActions } from "vuex";
 import { DIFFICULTY_THRESHOLD, THRESHOLD_MULTIPLIERS, THRESHOLD_MULTIPLIERS_LIMIT } from '../../mixins/rules.js';
 import ActiveMonster from "./active-monster"
+import MonsterRoster from "./monster-roster"
 
 export default {
   name: "MonstersList",
   components: {
-    ActiveMonster
+    ActiveMonster,
+    MonsterRoster
   },
   data: () => ({
     selectedMonsters: [],

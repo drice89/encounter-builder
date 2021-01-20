@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="loading">
-            <sync-loader :loading="loading" :color="color" :size="'50px'"></sync-loader>
+            <sync-loader :loading="loading" :size="'50px'"></sync-loader>
         </div>
         <div v-else>
             <div>Name {{ monster.name}}</div>
