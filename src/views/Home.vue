@@ -2,8 +2,8 @@
   <div>
     <PartyDifficultyThresholds />
     <MonsterList />
-    <CharacterForm />
     <EncounterTable />
+    <CharacterForm />
   </div>
 </template>
 

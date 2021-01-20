@@ -3,25 +3,23 @@
       <h2> Encounter Monsters </h2>
       <v-simple-table dark>
         <thead>
+          <td>Id</td>
           <td>Monster Name</td>
           <td>XP value</td>
           <td>Remove</td> 
         </thead>
         <tr v-for="(monster, index) in monsters" :key="index">
+          <td>{{index + 1}}</td>
           <td>{{ monster.name }}</td>
           <td>{{ monster.xp }}</td>
           <td><v-btn @click="$emit('remove', monster)">X</v-btn></td>
         </tr>
         <tfoot>
           <td>
-            <div>Total Monsters:</div>
-            <div>{{ monsters.length }}</div>
-          </td>
-          <td>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <span v-on="on">
-                  <div> Monster Xp: </div>
+                  <div> Monster Xp </div>
                   <div> {{ adjustedTotalXp }} </div>
                 </span>
               </template>

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="Object.values(getAllCharactersFromState)" item-key="id" dark>
+    <v-data-table 
+      :headers="headers" 
+      :items="Object.values(tableItems)" 
+      item-key="id" 
+      dark
+    >
     </v-data-table>
     <v-btn @click="save">Save</v-btn> 
   </div>
@@ -23,7 +28,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getAllCharactersFromState"]),
+    ...mapGetters(["getAllCharactersFromState", "getSelectedMonstersFromState"]),
+    tableItems(){
+      return {
+        ...this.getAllCharactersFromState, 
+        ...this.getSelectedMonstersFromState
+      }
+    }
   },
   methods: {
     save() {

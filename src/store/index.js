@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     monsters: {},
     characters: {},
+    selectedMonsters: {},
     spinner: false
   },
   mutations: {
@@ -17,6 +18,9 @@ export default new Vuex.Store({
     },
     SET_SAVED_CHARACTERS(state, payload) {
       state.characters = { ...payload }
+    },
+    SET_SELECTED_MONSTERS(state, payload) {
+      Vue.set(state.selectedMonsters, payload.id, payload)
     },
     ADD_MONSTER(state, payload) {
       state.monsters[payload.index] = payload
@@ -58,6 +62,9 @@ export default new Vuex.Store({
     },
     async setSavedCharacters({ commit }, data) {
       commit("SET_SAVED_CHARACTERS", data)
+    },
+    async setSelectedMonsters({ commit }, data) {
+      commit("SET_SELECTED_MONSTERS", data)
     }
   },
   getters: {
@@ -79,6 +86,9 @@ export default new Vuex.Store({
     },
     getSpinnerStatus: state => {
       return state.spinner
+    },
+    getSelectedMonstersFromState: state => {
+      return state.selectedMonsters
     }
   },
   modules: {}

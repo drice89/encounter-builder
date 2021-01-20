@@ -24,18 +24,19 @@
       </ul>
     </div>
     <ActiveMonster v-if="activeMonster" class="active-monster" :monster="activeMonster" />
-    <MonsterRoster 
-      :adjustedTotalXp="adjustedTotalXp" 
-      :monsters="selectedMonsters"
-      :currentSelectedThreshold="threshold"
-      @remove = "removeMonsterFromRoster"
-     />
-  </div>
-  <div>
-    <select v-model="threshold">
-      <option v-for="option in Object.keys(difficultyThreshold)" :key="option" :value="difficultyThreshold[option]" :label="option.toLowerCase()" />
-    </select>
-    <v-btn @click="generateRandomEncounter()">Generate Random Encounter</v-btn>
+    <div>
+      <MonsterRoster 
+        :adjustedTotalXp="adjustedTotalXp" 
+        :monsters="selectedMonsters"
+        :currentSelectedThreshold="threshold"
+        @remove="removeMonsterFromRoster"
+      />
+      <MonsterButtons 
+        @change-threshold="changeThreshold" 
+        @gen-encounter="generateRandomEncounter"
+        @add-monsters="addMonstersToEncounter" 
+      />
+    </div>
   </div>
 </div>
 </template>
@@ -47,16 +48,18 @@ import { mapGetters, mapActions } from "vuex";
 import { DIFFICULTY_THRESHOLD, THRESHOLD_MULTIPLIERS, THRESHOLD_MULTIPLIERS_LIMIT } from '../../mixins/rules.js';
 import ActiveMonster from "./active-monster"
 import MonsterRoster from "./monster-roster"
+import MonsterButtons from "./monster-buttons"
 
 export default {
   name: "MonstersList",
   components: {
     ActiveMonster,
-    MonsterRoster
+    MonsterRoster,
+    MonsterButtons
   },
   data: () => ({
     selectedMonsters: [],
-    difficultyThreshold: DIFFICULTY_THRESHOLD,
+    // difficultyThreshold: DIFFICULTY_THRESHOLD,
     threshold: DIFFICULTY_THRESHOLD.EASY,
     rawTotalXp: 0,
     adjustedTotalXp: 0,
@@ -126,6 +129,17 @@ export default {
     },
     monsterInSearch(monster) {
       return !this.search || monster.name.toLowerCase().toLowerCase().includes(this.search)
+    },
+    changeThreshold(payload){
+      this.threshold = payload
+    },
+    addMonstersToEncounter() {
+      let monstersToBeAdded = {}
+      this.selectedMonsters.forEach( (monster, index) => {
+        monster.monster = true
+        monstersToBeAdded[index] = monster
+      })
+      this.$store.dispatch("setSelectedMonsters", monstersToBeAdded)
     }
   }
 };
@@ -162,12 +176,6 @@ div.monsters-list-container {
   .active-monster {
     width: 400px;
     height: 400px;
-  }
-  .selected-monsters {
-    width: 500px;
-    height: 400px;
-    padding: 16px;
-    overflow-y: auto;
   }
 }
 </style>
