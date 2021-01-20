@@ -24,7 +24,12 @@
       </ul>
     </div>
     <ActiveMonster v-if="activeMonster" class="active-monster" :monster="activeMonster" />
-    <MonsterRoster :adjustedTotalXp="adjustedTotalXp" :monsters="selectedMonsters" @remove = "removeMonsterFromRoster" />
+    <MonsterRoster 
+      :adjustedTotalXp="adjustedTotalXp" 
+      :monsters="selectedMonsters"
+      :currentSelectedThreshold="threshold"
+      @remove = "removeMonsterFromRoster"
+     />
   </div>
   <div>
     <select v-model="threshold">
@@ -61,7 +66,7 @@ export default {
   computed: {
     ...mapGetters([
       "getAllMonstersFromState", 
-      "getTotalCharacterLevel"
+      "getCurrentThresholdXp"
     ]),
     monstersByCr() {
       return this.getAllMonstersFromState
@@ -72,7 +77,7 @@ export default {
   methods: {
     ...mapActions(["addMonster"]),
     generateRandomEncounter(){
-      const totalXp = this.getTotalCharacterLevel(this.threshold)
+      const totalXp = this.getCurrentThresholdXp(this.threshold)
       let runningMonXpTotal = 0
       let finished = false
       const pool = []

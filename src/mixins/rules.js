@@ -29,6 +29,13 @@ export const DIFFICULTY_THRESHOLD = {
   DEADLY: 3
 }
 
+export const DIFFICULTY_THRESHOLD_NAMES = {
+  0: "Easy",
+  1: "Medium",
+  2: "Hard",
+  3: "Deadly"
+}
+
 export const THRESHOLD_MULTIPLIERS = {
   1: 1,
   2: 1.5,

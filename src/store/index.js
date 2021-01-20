@@ -70,7 +70,7 @@ export default new Vuex.Store({
     charactersLength: state => {
       return Object.keys(state.characters).length || 0
     },
-    getTotalCharacterLevel: state => threshold => {
+    getCurrentThresholdXp: state => threshold => {
       let totalXp = 0
       Object.values(state.characters).forEach(char => {
         totalXp += ENCOUNTER_DIFFICULTY_TABLE[char.level][threshold]

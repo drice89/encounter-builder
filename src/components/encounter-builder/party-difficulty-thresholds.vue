@@ -25,18 +25,18 @@ import { mapGetters } from "vuex";
 export default {
     name: "PartyDifficultyThresholds",
     computed: {
-        ...mapGetters(["getTotalCharacterLevel"]),
+        ...mapGetters(["getCurrentThresholdXp"]),
         easyThreshold() {
-        return this.getTotalCharacterLevel(DIFFICULTY_THRESHOLD.EASY)
+        return this.getCurrentThresholdXp(DIFFICULTY_THRESHOLD.EASY)
         },
         mediumThreshold() {
-        return this.getTotalCharacterLevel(DIFFICULTY_THRESHOLD.MEDIUM)
+        return this.getCurrentThresholdXp(DIFFICULTY_THRESHOLD.MEDIUM)
         },
         hardThreshold() {
-        return this.getTotalCharacterLevel(DIFFICULTY_THRESHOLD.HARD)
+        return this.getCurrentThresholdXp(DIFFICULTY_THRESHOLD.HARD)
         },
         deadlyThreshold() {
-        return this.getTotalCharacterLevel(DIFFICULTY_THRESHOLD.DEADLY)
+        return this.getCurrentThresholdXp(DIFFICULTY_THRESHOLD.DEADLY)
         },
     }
 }

@@ -14,10 +14,30 @@
         </tr>
         <tfoot>
           <td>
-            Total Monsters: {{ monsters.length }}
+            <div>Total Monsters:</div>
+            <div>{{ monsters.length }}</div>
           </td>
           <td>
-            Total Adjusted Xp: {{ adjustedTotalXp }}
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <span v-on="on">
+                  <div> Monster Xp: </div>
+                  <div> {{ adjustedTotalXp }} </div>
+                </span>
+              </template>
+              <span> Total adjusted xp</span>
+            </v-tooltip>
+          </td>
+          <td> 
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <span v-on="on">
+                  <div>Threshold Xp</div>
+                  <div>{{ thresholdXp }}</div>
+                </span>
+              </template>
+              <span>{{thresholdName}}</span>
+            </v-tooltip>
           </td>
         </tfoot>
       </v-simple-table>
@@ -25,6 +45,8 @@
 </template>
 
 <script>
+  import { mapGetters } from "vuex";
+  import { DIFFICULTY_THRESHOLD_NAMES } from "../../mixins/rules.js";
     export default {
         name: "MonsterRoster",
         props: {
@@ -35,7 +57,21 @@
             adjustedTotalXp: {
                 type: Number,
                 default: 0
+            },
+            currentSelectedThreshold: {
+              type: Number,
+              default: null
             }
+            
+        },
+        computed: {
+          ...mapGetters(["getCurrentThresholdXp"]),
+          thresholdXp() {
+            return this.getCurrentThresholdXp(this.currentSelectedThreshold)
+          },
+          thresholdName(){
+            return DIFFICULTY_THRESHOLD_NAMES[this.currentSelectedThreshold]
+          }
         }
     }
 </script>
