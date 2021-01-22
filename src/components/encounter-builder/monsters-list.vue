@@ -139,6 +139,7 @@ export default {
         monster.monster = true
         monstersToBeAdded[index] = monster
       })
+      debugger
       this.$store.dispatch("setSelectedMonsters", monstersToBeAdded)
     }
   }

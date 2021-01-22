@@ -20,7 +20,7 @@ export default new Vuex.Store({
       state.characters = { ...payload }
     },
     SET_SELECTED_MONSTERS(state, payload) {
-      Vue.set(state.selectedMonsters, payload.id, payload)
+      state.selectedMonsters = payload
     },
     ADD_MONSTER(state, payload) {
       state.monsters[payload.index] = payload

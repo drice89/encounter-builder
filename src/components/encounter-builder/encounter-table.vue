@@ -2,8 +2,8 @@
   <div>
     <v-data-table 
       :headers="headers" 
-      :items="Object.values(tableItems)" 
-      item-key="id" 
+      :items="tableItems" 
+      item-key="tableKey" 
       dark
     >
     </v-data-table>
@@ -30,10 +30,21 @@ export default {
   computed: {
     ...mapGetters(["getAllCharactersFromState", "getSelectedMonstersFromState"]),
     tableItems(){
-      return {
-        ...this.getAllCharactersFromState, 
-        ...this.getSelectedMonstersFromState
-      }
+      return this.charItems.concat(this.monItems)
+    },
+    charItems(){
+      let chars = Object.values(this.getAllCharactersFromState)
+      chars.forEach(char => {
+        char.tableKey = `${char.id+ char.name}`
+      })
+      return chars
+    },
+    monItems(){
+      let mons = Object.values(this.getSelectedMonstersFromState)
+      mons.forEach(mon => {
+        mon.tableKey = `${mon.id + mon.index}`
+      })
+      return mons
     }
   },
   methods: {
