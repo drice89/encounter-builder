@@ -1,9 +1,6 @@
 <template>
   <div class="monsters-pick-list">
     <div>
-      <h2>Monsters</h2>
-    </div>
-    <div>
       <input type="text" v-model="search" placeholder="Search" class="search-bar" />
     </div>
     <ul class="monster-select">
@@ -50,9 +47,9 @@ export default {
 
 <style lang="scss" scoped>
 .monsters-pick-list{
-  height: 100;
+  height: 475px;
   width: 332px;
-  margin: 32px 12px 12px;
+  margin: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,7 +70,7 @@ export default {
 
   .monster-select {
     width: 325px;
-    height: 475px;
+    height: 400px;
     display: block;
     overflow-y: scroll;
 

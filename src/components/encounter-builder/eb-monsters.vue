@@ -1,12 +1,15 @@
 
 <template>
 <div class="encounter-monsters-container">
-  <div class="monsters-list">
-    <MonsterSearch
-      @add-monster-to-roster="addMonsterToRoster"
-      @get-monster-profile="getMonsterProfile"
-    />
-    <ActiveMonster class="active-monster" :monster="activeMonster" />
+  <div class="monsters-list-wrapper">
+    <h2 class="monsters-header">Monsters</h2>
+    <div class="monsters-list">
+      <MonsterSearch
+        @add-monster-to-roster="addMonsterToRoster"
+        @get-monster-profile="getMonsterProfile"
+      />
+      <ActiveMonster class="active-monster" :monster="activeMonster" />
+    </div>
   </div>
   <div class="monster-roster">
     <MonsterRoster 
@@ -58,7 +61,7 @@ export default {
   },
   methods: {
     ...mapActions(["addMonster"]),
-    generateRandomEncounter(){
+    generateRandomEncounter(monsterList){
       const totalXp = this.getCurrentThresholdXp(this.threshold)
       let runningMonXpTotal = 0
       let finished = false
@@ -130,16 +133,24 @@ div.encounter-monsters-container {
   background-color: #1E1E1E;
   color: white;
 
-  div.monsters-list {
-    display:flex;
-    align-content: flex-start;
-    border: 1px solid rgba(0,0,0,1);
+  div.monsters-list-wrapper{
+    border: 1px solid rgb(160, 160, 160);
     margin: 12px;
     border-radius: 6px;
+
+    h2.monsters-header{
+      text-align: center;
+      border-bottom: 1px solid rgb(160, 160, 160);
+    }
+
+    div.monsters-list {
+      display:flex;
+      align-content: flex-start;
+    }
   }
 
   div.monster-roster {
-    border: 1px solid rgba(0,0,0,1);
+    border: 1px solid rgb(160, 160, 160);
     margin: 12px;
     border-radius: 6px;
   }
