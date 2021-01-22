@@ -1,6 +1,9 @@
 <template>
-    <div>
-        <div v-if="loading">
+    <div class="active-monster-wrapper">
+        <div v-if="!monster">
+          <h3>Hover over a monster on the list to see monster details.</h3>
+        </div>
+        <div v-else-if="loading">
             <sync-loader :loading="loading" :size="'50px'"></sync-loader>
         </div>
         <div v-else>
@@ -41,9 +44,9 @@
 </script>
 
 <style lang="scss" scoped>
-  .active-monster {
-    width: 400px;
-    height: 400px;
+  div.active-monster-wrapper{
+    width: 750px;
+    margin: 32px 12px 12px;
+    overflow-y: auto;
   }
-
 </style>

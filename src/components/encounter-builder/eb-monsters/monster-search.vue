@@ -1,10 +1,10 @@
 <template>
   <div class="monsters-pick-list">
     <div>
-      Monsters
+      <h2>Monsters</h2>
     </div>
     <div>
-      <input type="text" v-model="search">
+      <input type="text" v-model="search" placeholder="Search" class="search-bar" />
     </div>
     <ul class="monster-select">
       <li
@@ -49,24 +49,43 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.monster-select {
-  min-width: 200px;
-  max-width: 400px;
-  height: 400px;
-  display: block;
-  overflow-y: scroll;
+.monsters-pick-list{
+  height: 100;
+  width: 332px;
+  margin: 32px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  li.monster-option {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 2px 6px;
-    &:hover{
-      background-color: white;
-      color: black;
+  .search-bar {
+    border-radius: 6px;
+    margin: 12px 4px;
+    width: 315px; 
+    height: 35px; 
+    border: 1px solid #999999; 
+    padding: 10px;
+    color: rgb(255, 255, 255);
+
+    &:focus{
+       outline: rgb(255, 255, 255) auto 1px;
     }
-    .fixed-width {
-      width: 200px;
+  }
+
+  .monster-select {
+    width: 325px;
+    height: 475px;
+    display: block;
+    overflow-y: scroll;
+
+    li.monster-option {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 2px 0px;
+      &:hover{
+        background-color: white;
+        color: black;
+      }
     }
   }
 }

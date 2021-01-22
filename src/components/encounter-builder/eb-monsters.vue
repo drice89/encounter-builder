@@ -1,12 +1,14 @@
 
 <template>
 <div class="encounter-monsters-container">
-  <MonsterSearch
-    @add-monster-to-roster="addMonsterToRoster"
-    @get-monster-profile="getMonsterProfile"
-  />
-  <ActiveMonster v-if="activeMonster" class="active-monster" :monster="activeMonster" />
-  <div>
+  <div class="monsters-list">
+    <MonsterSearch
+      @add-monster-to-roster="addMonsterToRoster"
+      @get-monster-profile="getMonsterProfile"
+    />
+    <ActiveMonster class="active-monster" :monster="activeMonster" />
+  </div>
+  <div class="monster-roster">
     <MonsterRoster 
       :adjustedTotalXp="adjustedTotalXp" 
       :monsters="selectedMonsters"
@@ -121,14 +123,26 @@ export default {
 
 <style lang="scss" scoped>
 div.encounter-monsters-container {
+  width: 100%;
+  height: 550px;
   display: flex;
   justify-content: flex-start;
   background-color: #1E1E1E;
   color: white;
 
-  .active-monster {
-    width: 400px;
-    height: 400px;
+  div.monsters-list {
+    display:flex;
+    align-content: flex-start;
+    border: 1px solid rgba(0,0,0,1);
+    margin: 12px;
+    border-radius: 6px;
   }
+
+  div.monster-roster {
+    border: 1px solid rgba(0,0,0,1);
+    margin: 12px;
+    border-radius: 6px;
+  }
+
 }
 </style>
