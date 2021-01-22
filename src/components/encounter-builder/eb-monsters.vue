@@ -1,42 +1,23 @@
 
 <template>
-<div>
-  <div class="monsters-list-container">
-    <div class="monsters-pick-list">
-      <div>
-        Monsters
-      </div>
-      <div>
-        <input type="text" v-model="search">
-      </div>
-      <ul class="monster-select">
-        <li
-          v-for="(monster, index) in monstersByCr"
-          :key="index"
-          :value="monster"
-          @click="addMonsterToRoster(monster)"
-          @mouseenter="getMonsterProfile(monster)"
-          class="monster-option"
-        >
-          <span>{{ monster.name }}</span>
-          <span>{{ monster.challenge_rating }}</span>
-        </li>
-      </ul>
-    </div>
-    <ActiveMonster v-if="activeMonster" class="active-monster" :monster="activeMonster" />
-    <div>
-      <MonsterRoster 
-        :adjustedTotalXp="adjustedTotalXp" 
-        :monsters="selectedMonsters"
-        :currentSelectedThreshold="threshold"
-        @remove="removeMonsterFromRoster"
-      />
-      <MonsterButtons 
-        @change-threshold="changeThreshold" 
-        @gen-encounter="generateRandomEncounter"
-        @add-monsters="addMonstersToEncounter" 
-      />
-    </div>
+<div class="encounter-monsters-container">
+  <MonsterSearch
+    @add-monster-to-roster="addMonsterToRoster"
+    @get-monster-profile="getMonsterProfile"
+  />
+  <ActiveMonster v-if="activeMonster" class="active-monster" :monster="activeMonster" />
+  <div>
+    <MonsterRoster 
+      :adjustedTotalXp="adjustedTotalXp" 
+      :monsters="selectedMonsters"
+      :currentSelectedThreshold="threshold"
+      @remove="removeMonsterFromRoster"
+    />
+    <MonsterButtons 
+      @change-threshold="changeThreshold" 
+      @gen-encounter="generateRandomEncounter"
+      @add-monsters="addMonstersToEncounter" 
+    />
   </div>
 </div>
 </template>
@@ -46,16 +27,18 @@
 // refactor ternary to get multiplier
 import { mapGetters, mapActions } from "vuex";
 import { DIFFICULTY_THRESHOLD, THRESHOLD_MULTIPLIERS, THRESHOLD_MULTIPLIERS_LIMIT } from '../../mixins/rules.js';
-import ActiveMonster from "./active-monster"
-import MonsterRoster from "./monster-roster"
-import MonsterButtons from "./monster-buttons"
+import ActiveMonster from "./eb-monsters/active-monster"
+import MonsterRoster from "./eb-monsters/monster-roster"
+import MonsterButtons from "./eb-monsters/monster-buttons"
+import MonsterSearch from "./eb-monsters/monster-search"
 
 export default {
-  name: "MonstersList",
+  name: "EbMonsters",
   components: {
     ActiveMonster,
     MonsterRoster,
-    MonsterButtons
+    MonsterButtons,
+    MonsterSearch
   },
   data: () => ({
     selectedMonsters: [],
@@ -64,18 +47,12 @@ export default {
     rawTotalXp: 0,
     adjustedTotalXp: 0,
     activeMonster: null,
-    search: null
+    // search: null
   }),
   computed: {
-    ...mapGetters([
-      "getAllMonstersFromState", 
+    ...mapGetters([ 
       "getCurrentThresholdXp"
     ]),
-    monstersByCr() {
-      return this.getAllMonstersFromState
-        .filter(monster => this.monsterInSearch(monster))
-        .sort((a, b) => a.cr - b.cr)
-    },
   },
   methods: {
     ...mapActions(["addMonster"]),
@@ -127,9 +104,6 @@ export default {
       }
       this.activeMonster = monster
     },
-    monsterInSearch(monster) {
-      return !this.search || monster.name.toLowerCase().toLowerCase().includes(this.search)
-    },
     changeThreshold(payload){
       this.threshold = payload
     },
@@ -139,7 +113,6 @@ export default {
         monster.monster = true
         monstersToBeAdded[index] = monster
       })
-      debugger
       this.$store.dispatch("setSelectedMonsters", monstersToBeAdded)
     }
   }
@@ -147,33 +120,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-div.monsters-list-container {
+div.encounter-monsters-container {
   display: flex;
   justify-content: flex-start;
   background-color: #1E1E1E;
   color: white;
 
-  .monster-select {
-    min-width: 200px;
-    max-width: 400px;
-    height: 400px;
-    display: block;
-    overflow-y: scroll;
-
-    li.monster-option {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      padding: 2px 6px;
-      &:hover{
-        background-color: white;
-        color: black;
-      }
-      .fixed-width {
-        width: 200px;
-      }
-    }
-  }
   .active-monster {
     width: 400px;
     height: 400px;

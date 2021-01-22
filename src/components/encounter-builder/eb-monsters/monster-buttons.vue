@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import { DIFFICULTY_THRESHOLD } from '../../mixins/rules.js';
+    import { DIFFICULTY_THRESHOLD } from '@/mixins/rules.js';
     export default {
         name: "MonsterButtons",
         data: () => ({

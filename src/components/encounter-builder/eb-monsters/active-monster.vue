@@ -41,5 +41,9 @@
 </script>
 
 <style lang="scss" scoped>
+  .active-monster {
+    width: 400px;
+    height: 400px;
+  }
 
 </style>

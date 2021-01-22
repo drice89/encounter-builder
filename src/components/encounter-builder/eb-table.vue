@@ -7,15 +7,19 @@
       dark
     >
     </v-data-table>
-    <v-btn @click="save">Save</v-btn> 
+    <v-btn @click="save">Save</v-btn>
+    <CharacterForm />
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import CharacterForm from "./eb-table/character-form.vue"
 export default {
-  name: "EncounterTable",
-
+  name: "EbTable",
+  components: {
+    CharacterForm
+  },
   data() {
     return {
       headers: [

@@ -44,7 +44,7 @@
 
 <script>
   import { mapGetters } from "vuex";
-  import { DIFFICULTY_THRESHOLD_NAMES } from "../../mixins/rules.js";
+  import { DIFFICULTY_THRESHOLD_NAMES } from "@/mixins/rules.js";
     export default {
         name: "MonsterRoster",
         props: {
