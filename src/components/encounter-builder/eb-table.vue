@@ -6,6 +6,32 @@
       item-key="tableKey" 
       dark
     >
+      <template v-slot:top>
+        <v-toolbar
+          flat
+        >
+          <v-toolbar-title>Encounter Table</v-toolbar-title>
+          <v-divider
+            class="mx-4"
+            inset
+            vertical
+          ></v-divider>
+          <v-spacer></v-spacer>
+          <NewEntryDialog/>
+        </v-toolbar>
+      </template>
+      <template v-slot:header.level="{ header }">
+        {{ header.text.toUpperCase() }}/CR
+      </template>
+      <template v-slot:header.name="{ header }">
+        {{ header.text.toUpperCase() }}
+      </template>
+      <template v-slot:item.level="{ item }">
+        {{ item.level || item.challenge_rating }}
+      </template>
+      <template v-slot:item.hp="{ item }">
+        {{ item.hp || item.hit_points }}
+      </template>
     </v-data-table>
     <v-btn @click="save">Save</v-btn>
     <CharacterForm />
@@ -15,10 +41,12 @@
 <script>
 import { mapGetters } from "vuex";
 import CharacterForm from "./eb-table/character-form.vue"
+import NewEntryDialog from "./new-entry-dialoge.vue"
 export default {
   name: "EbTable",
   components: {
-    CharacterForm
+    CharacterForm,
+    NewEntryDialog
   },
   data() {
     return {
@@ -28,7 +56,8 @@ export default {
         { text: "hp", value: "hp" },
         { text: "init", value: "init" },
       ],
-      numChars: 0
+      numChars: 0,
+      dialog: false
     };
   },
   computed: {
@@ -49,12 +78,12 @@ export default {
         mon.tableKey = `${mon.id + mon.index}`
       })
       return mons
-    }
+    },
   },
   methods: {
     save() {
       localStorage.characters = JSON.stringify(this.getAllCharactersFromState)
-    }
+    },
   },
 }
 </script>
