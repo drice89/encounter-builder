@@ -7,9 +7,15 @@
             <sync-loader :loading="loading" :size="'50px'"></sync-loader>
         </div>
         <div v-else>
-            <div>Name {{ monster.name}}</div>
-            <div>HP {{ monster.hit_points}}</div>
-            <div>AC {{ monster.armor_class}}</div>
+            <div>Name: {{ monster.name}}</div>
+            <div>HP: {{ monster.hit_points}}</div>
+            <div>AC: 
+                <ol>
+                    <li v-for="(entry, index) in monster.armor_class" :key="index">
+                        {{  flattenAc(entry) }}
+                    </li>
+                </ol>
+            </div>
             <div>
                 Attack
                 <div v-for="(action, index) in monster.actions" :key="index">
@@ -38,7 +44,22 @@
             loading() {
                 return !this.monster.loaded
             }
-        }
+        },
+        methods: {
+            flattenAc(acObject) {
+                let str = ""
+
+                let type = acObject["type"]
+                let armor = acObject["armor"] && acObject["armor"].map(a => (a["name"])).join(" ")
+                let value = acObject["value"]
+
+                if (type) str += type + " "
+                if (armor) str += armor + " "
+                if (value) str += value + " "
+
+                return str;
+            }
+        },
         
     }
 </script>
