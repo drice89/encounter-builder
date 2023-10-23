@@ -34,8 +34,12 @@ export default {
     monstersByCr() {
       return this.getAllMonstersFromState
         .filter(monster => this.monsterInSearch(monster))
-        .sort((a, b) => a.cr - b.cr)
-    },
+        .sort((a, b) => {
+          let _a = parseFloat(a.challenge_rating)
+          let _b = parseFloat(b.challenge_rating)
+          return _a - _b
+        })
+    }
   },
   methods: {
     monsterInSearch(monster) {
